@@ -14,6 +14,9 @@ cd torch
 
 patch -p1 < ../torch.patch
 
+cd -
+
+
 mkfifo ale_fifo
 
 nc -l -p 1567 < ale_fifo | ./ale -game_controller fifo -display_scree true -run_length_encoding false ../DeepMind-Atari-Deep-Q-Learner/roms/breakout.bin > ale_fifo
