@@ -4,6 +4,7 @@ Copyright (c) 2014 Google Inc.
 See LICENSE file for full terms of limited license.
 ]]
 
+
 if not dqn then
     require "initenv"
 end
@@ -43,6 +44,9 @@ cmd:option('-verbose', 2,
            'the higher the level, the more information is printed to screen')
 cmd:option('-threads', 1, 'number of BLAS threads')
 cmd:option('-gpu', -1, 'gpu flag')
+
+cmd:option('-ale_host', '', 'ALE server host') 
+cmd:option('-ale_port', 1567, 'ALE server port')
 
 cmd:text()
 
@@ -214,3 +218,4 @@ while step < opt.steps do
         collectgarbage()
     end
 end
+
