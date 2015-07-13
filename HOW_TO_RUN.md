@@ -8,5 +8,10 @@ cmake -DUSE_SDL=ON -DUSE_RLGLUE=OFF -DBUILD_EXAMPLES=ON .
 make -j 4
 
 # Run server in FIFO mode
+./install_dependencies.sh
+
+cd torch
+patch -p1 < ../torch.patch
+
 mkfifo ale_fifo
 nc -l -p 1567 < ale_fifo | ./ale -game_controller fifo -display_scree true -run_length_encoding false ../DeepMind-Atari-Deep-Q-Learner/roms/breakout.bin > ale_fifo
