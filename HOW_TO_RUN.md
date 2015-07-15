@@ -20,3 +20,14 @@ cd -
 mkfifo ale_fifo
 
 nc -l -p 1567 < ale_fifo | ./ale -game_controller fifo -display_scree true -run_length_encoding false ../DeepMind-Atari-Deep-Q-Learner/roms/breakout.bin > ale_fifo
+
+# To play on remote server - set ALE_HOST enviroment variable
+env ALE_HOST=localhost ./run_cpu breakout
+env ALE_HOST=localhost ./run_gpu breakout
+
+# To play localy - ommit it
+./run_cpu breakout
+./run_gpu breakout
+
+#or even
+env -u ALE_HOST ./run_cpu breakout 
