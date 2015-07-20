@@ -48,6 +48,9 @@ cmd:option('-gpu', -1, 'gpu flag')
 cmd:option('-ale_host', '', 'ALE server host') 
 cmd:option('-ale_port', 1567, 'ALE server port')
 
+cmd:option('-ale_pass', '', 'password for ALE server') 
+cmd:option('-ale_login', '', 'login for ALE server') 
+
 cmd:text()
 
 local opt = cmd:parse(arg)

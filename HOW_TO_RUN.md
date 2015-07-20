@@ -15,7 +15,8 @@ Install dependencies and apply the patch from this repo
 ./install_dependencies.sh
 
 cd torch
-patch -p1 < ../torch.patch
+#patch -p1 < ../torch.patch
+patch -p1 < ../torch.patch.02
 cd -
 ```
 
