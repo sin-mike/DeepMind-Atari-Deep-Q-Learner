@@ -23,10 +23,10 @@ index f0bb25e..de2d8a0 100644
  --     {torch.Tensor(zeroBasedAction)}
 diff --git a/share/lua/5.1/alewrap/AleRemote.lua b/share/lua/5.1/alewrap/AleRemote.lua
 new file mode 100644
-index 0000000..b39138d
+index 0000000..42f3ccb
 --- /dev/null
 +++ b/share/lua/5.1/alewrap/AleRemote.lua
-@@ -0,0 +1,272 @@
+@@ -0,0 +1,289 @@
 +--[[ Copyright 2014 Google Inc.
 +
 +This program is free software; you can redistribute it and/or
@@ -71,7 +71,6 @@ index 0000000..b39138d
 +require 'torch'
 +local Env = torch.class('alewrap.AleRemoteEnv')
 +function Env:__init(host, port, romName, extraConfig)
-+		print("CLIENT 0")
 +    self.config = {
 +        -- An additional reward signal can be provided
 +        -- after the end of one game.
@@ -90,19 +89,23 @@ index 0000000..b39138d
 +		self.ale_conn = i
 +		local socket = require("socket")
 +		self.client = socket.tcp();
-+		print("CLIENT 1")
 +		self.client:settimeout(1)
-+		print("CLIENT 2")
 +		self.client:connect(host, port);
-+		print("CLIENT 3")
++    
++    local auth_str = ale_login .. "," .. ale_pass .. "," .. ale_rom_name .. "\n"
++    print("AUTH: "..auth_str) 
++    self.client:send(auth_str)
++
 +		msg = self.client:receive('*l')
++
++    print("MSG: " , msg) --, self.width, self.height)
++
 +		self.width = tonumber(string.sub(msg,1,3))
 +		self.height = tonumber(string.sub(msg,5,7))
 +		
-+print("MSG: " , msg, self.width, self.height)
 +		
 +		self.client:send('1,1,1,1\n')
-+		self.last_chunk = self:receiveMain()		
++    self.last_chunk = self:receiveMain()		
 +
 +    local obsShapes = {{self.height, self.width}}
 +    if self.config.enableRamObs then
@@ -145,7 +148,7 @@ index 0000000..b39138d
 +	for cc in str:gmatch".." do
 +    -- do something with c
 +		t[i] = tonumber(cc, 16)
-+		i = 1 + 1
++		i = i + 1
 +	end
 +	return t
 +end
@@ -154,14 +157,28 @@ index 0000000..b39138d
 +function Env:receiveMain()
 +	data = self.client:receive('*l')
 +	--print("RAW:", data)
-+	ram_string = string.sub(data, 1, 256)
-+	--print("RAM:", ram_string)
-+	ram_obs = hex_to_byte_tensor_1d(ram_string, 128)
-+	screen_sz =  self.width * self.height * 2
-+	screen_string = string.sub(data, 258, 257 + screen_sz)
-+	--print("SCREEN:", screen_string)
-+	screen_obs = hex_to_byte_tensor_2d(screen_string, self.width, self.height)
-+	episode_string = string.sub(data, 256 + 1 + screen_sz + 1)
++	offset = 1
++	
++	if false then
++		--RAM analysis is not allowed for Deephack.Game participants
++		ram_string = string.sub(data, offset, 256)
++		--print("RAM:", ram_string)
++		ram_obs = hex_to_byte_tensor_1d(ram_string, 128)
++		offset = offset + 256 + 1
++	end
++
++	if true then
++		screen_sz =  self.width * self.height * 2
++		screen_string = string.sub(data, offset, offset -1 + screen_sz)
++		--print("SCREEN:", screen_string)
++
++		screen_obs = hex_to_byte_tensor_2d(screen_string, self.width, self.height)
++		--print("SZ: ", screen_obs:size())
++
++		offset = offset + screen_sz + 1
++	end
++ 
++	episode_string = string.sub(data, offset)
 +
 +	--print("EPISODE: ", episode_string)	
 +	terminal, reward = string.match(episode_string, "(%d+),(%d+)")

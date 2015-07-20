@@ -28,9 +28,14 @@ nc -l -p 1567 < ale_fifo | ./ale -game_controller fifo -display_screen true -run
 ```
 
 # To play on remote server - set ALE_HOST enviroment variable
+NB! Plaese read aout setup ALE server setup: https://github.com/gerrich/ale_team_runner
 ```
-env ALE_HOST=localhost ./run_cpu breakout
-env ALE_HOST=localhost ./run_gpu breakout
+# train at ale_server on local machine
+env ALE_LOGIN=test ALE_PASS=test12 ALE_HOST=localhost ALE_PORT=1567 ./run_cpu breakout
+env ALE_LOGIN=test ALE_PASS=test12 ALE_HOST=localhost ALE_PORT=1567 ./run_gpu breakout
+
+# train at ale_server on tesing server (passwords are mailed to teams)
+env ALE_LOGIN=team_15 ALE_PASS=XXXX ALE_HOST=93.175.18.243 ALE_PORT=17015 ./run_cpu breakout
 ```
 
 To play localy - ommit it
