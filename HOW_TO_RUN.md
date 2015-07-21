@@ -35,6 +35,9 @@ env ALE_LOGIN=test ALE_PASS=test12 ALE_HOST=localhost ALE_PORT=1567 ./run_gpu br
 
 # train at ale_server on tesing server (passwords are mailed to teams)
 env ALE_LOGIN=team_15 ALE_PASS=XXXX ALE_HOST=93.175.18.243 ALE_PORT=17015 ./run_cpu breakout
+
+# play at ale_server on tesing server (passwords are mailed to teams)
+env ALE_LOGIN=team_15 ALE_PASS=XXXX ALE_HOST=93.175.18.243 ALE_PORT=17015 ./play_cpu breakout
 ```
 
 To play localy - ommit it
